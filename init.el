@@ -295,8 +295,7 @@
 (global-set-key (kbd "C-z") 'undo)
 
 (global-set-key (kbd "C-<return>") 'dabbrev-expand)
-(global-set-key (kbd "C-c /") 'comment-region)
-(global-set-key (kbd "C-c \\") 'uncomment-region)
+(global-set-key (kbd "C-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c r") 'query-replace)
 (global-set-key (kbd "C-c g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell)
