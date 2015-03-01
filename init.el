@@ -287,6 +287,11 @@
 (set-face-bold-p 'comint-highlight-prompt t)
 (copy-face 'default 'comint-highlight-input)
 
+;; On Linux, the active region's background color is taken from GTK by default.
+;; The default color doesn't have enough contrast against the lightgray
+;; background.
+(set-face-attribute 'region nil :background "white")
+
 
 ;;-------------------------------------------------------------------------------
 ;; keybindings
