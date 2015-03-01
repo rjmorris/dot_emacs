@@ -236,7 +236,11 @@
 (setq uniquify-separator ":")
 
 (setq-default comint-scroll-to-bottom-on-output t)
-(setq-default scroll-error-top-bottom nil)
+
+;; If set to non-nil, PageUp when you're close to the top of the buffer moves
+;; point to the top of the buffer. If nil, point doesn't move and Emacs gives an
+;; error message.
+(setq-default scroll-error-top-bottom t)
 
 (setq backup-directory-alist '(("." . "~/.backups/emacs")))
 
