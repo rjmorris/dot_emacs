@@ -227,7 +227,7 @@
 (setq frame-title-format "%b - emacs")
 
 (delete-selection-mode t)
-(setq transient-mark-mode nil)
+(transient-mark-mode t)
 
 ;; This adds part of the directory to buffer names when two buffers with the same
 ;; name are opened. Without this, emacs appends <2>, <3>, ...
