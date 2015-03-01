@@ -244,8 +244,8 @@
 
 (setq backup-directory-alist '(("." . "~/.backups/emacs")))
 
-; For stopping on word boundaries in camelCase when using right-word and
-; left-word.
+;; For stopping on word boundaries in camelCase when using right-word and
+;; left-word.
 (subword-mode t)
 
 
