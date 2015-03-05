@@ -312,10 +312,18 @@
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
 
+;; For enlarging and shrinking windows, it's best to use a single key combo
+;; instead of a chained one. That way it can be held down to conveniently expand
+;; or shrink repeatedly.
+;;
 ;; These screw up emacs -nw, because the terminal maps the arrow keys
-;; to sequences that start with M-[
+;; to sequences that start with M-[, so the arrows fail to function.
 ;; (global-set-key (kbd "M-]") 'enlarge-window-horizontally)
 ;; (global-set-key (kbd "M-[") 'shrink-window-horizontally)
+(global-set-key (kbd "C->") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-<") 'shrink-window-horizontally)
+(global-set-key (kbd "C-^") 'enlarge-window)
+(global-set-key (kbd "C-_") 'shrink-window)
 
 ;; Swap the default keybindings for these. This way is more intuitive to me.
 (global-set-key (kbd "C-x >") 'scroll-left)
