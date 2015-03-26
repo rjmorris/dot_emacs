@@ -18,8 +18,19 @@
 ;;-------------------------------------------------------------------------------
 ;; package management
 
-
 (require 'package)
+
+
+;; In Windows, store packages on my hard drive instead of my home directory,
+;; which may be on a network share. (Having them on a network share can a
+;; problem at work because of disk space quotas.)
+;;
+;; This variable needs to be set before calling package-initialize.
+
+(if (eq system-type 'windows-nt)
+    (setq package-user-dir "C:/Program Files (x86)/emacs-packages/elpa"))
+
+
 (package-initialize)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") nil)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") nil)
@@ -52,9 +63,11 @@
 
 
 ;; Packages not handled by the package manager should go in the site-lisp
-;; subdirectory.
+;; subdirectory. For Windows, also check Program Files.
 
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(if (eq system-type 'windows-nt)
+    (add-to-list 'load-path "C:/Program Files (x86)/emacs-packages/site-lisp"))
 
 
 ;;-------------------------------------------------------------------------------
