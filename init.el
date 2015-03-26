@@ -286,7 +286,11 @@
       (set-cursor-color "black")
       (set-mouse-color "black")
       ;;(set-default-font "7x13")
-      (set-default-font "Bitstream Vera Sans Mono-10") ;; available in emacs23
+      (if (eq system-type 'windows-nt)
+          ;;(set-default-font "DejaVu Sans Mono-10")
+          ;;(set-default-font "Courier New-10")
+          (set-default-font "Source Code Pro-10")
+        (set-default-font "Bitstream Vera Sans Mono-10"))
       )
 )
 
