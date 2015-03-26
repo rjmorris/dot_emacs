@@ -45,6 +45,7 @@
     rainbow-mode
     switch-window
     web-mode
+    ess
     ))
 
 (defun required-packages-installed-p ()
@@ -116,6 +117,8 @@
 
 ;;-------------------------------------------------------------------------------
 ;; ESS section
+
+(require 'ess-site)
 
 ;; Don't ask for the starting directory, just use the working directory of the
 ;; current buffer.
