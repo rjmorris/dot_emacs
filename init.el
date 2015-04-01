@@ -80,6 +80,8 @@
 ;;-------------------------------------------------------------------------------
 ;; Python section
 
+(setq python-fill-docstring-style 'django)
+
 ;; electric-indent-mode has been disabled globally below.
 ;; (add-hook 'python-mode-hook
 ;;           (lambda()
