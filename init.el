@@ -116,6 +116,17 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; SH section
+
+(add-hook 'sh-mode-hook 'on-sh-mode t)
+(defun on-sh-mode ()
+  ;; Overriding sh-mode faces in my font-lock section below doesn't work.
+  ;; Apparently they must be overriden in the mode hook.
+  (copy-face 'default 'sh-quoted-exec)
+  )
+
+
+;;-------------------------------------------------------------------------------
 ;; ESS section
 
 (require 'ess-site)
