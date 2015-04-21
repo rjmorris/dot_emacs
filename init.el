@@ -293,6 +293,14 @@
 ;; left-word.
 (global-subword-mode)
 
+;; Don't automatically add a newline to the end of the file.
+(setq require-final-newline nil)
+;; Modes that think they need a newline at the end should override
+;; require-final-newline with the value of mode-require-final-newline, which
+;; defaults to t. Keep that behavior for now. If some modes abuse it, it's
+;; probably better to change it in the mode hook instead of globally here.
+;; (setq mode-require-final-newline nil)
+
 
 ;;-------------------------------------------------------------------------------
 ;; settings applicable in X
