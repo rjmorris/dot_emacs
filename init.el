@@ -140,7 +140,13 @@
 ;; Don't replace _ with <-
 (ess-toggle-underscore nil)
 
-;;(add-hook 'ess-mode-hook (lambda () (font-lock-mode 0)) t)
+(add-hook 'ess-mode-hook 'on-ess-mode t)
+(defun on-ess-mode ()
+  ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
+  ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
+  ;; terminal and GUI, but <return> works only in the GUI.
+  (local-set-key (kbd "RET") 'newline)
+)
 
 
 ;;-------------------------------------------------------------------------------
