@@ -282,8 +282,13 @@
 
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message nil)
-(tool-bar-mode 0)
-(set-scroll-bar-mode 'right)
+(if (display-graphic-p)
+    (prog-n
+     (tool-bar-mode 0)
+     (set-scroll-bar-mode 'right)
+    )
+)
+
 (setq column-number-mode t)
 (setq mouse-wheel-progressive-speed nil)
 (setq frame-title-format "%b - emacs")
