@@ -282,12 +282,6 @@
 
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message nil)
-(if (display-graphic-p)
-    (prog-n
-     (tool-bar-mode 0)
-     (set-scroll-bar-mode 'right)
-    )
-)
 
 (setq column-number-mode t)
 (setq mouse-wheel-progressive-speed nil)
@@ -325,10 +319,12 @@
 
 
 ;;-------------------------------------------------------------------------------
-;; settings applicable in X
+;; settings applicable only with graphical displays
 
-(if window-system
+(if (display-graphic-p)
     (progn
+      (tool-bar-mode 0)
+      (set-scroll-bar-mode 'right)
       (set-background-color "lightgray")
       (set-foreground-color "black")
       (set-cursor-color "black")
