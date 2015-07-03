@@ -278,6 +278,24 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; copy/paste
+
+;; Other Windows applications don't distinguish between the clipboard and the
+;; primary selection, so when Emacs does it's more of a nuisance than a benefit.
+
+(when (eq system-type 'windows-nt)
+  ;; This causes highlighted text to be copied to the clipboard instead of the
+  ;; primary selection.
+  (setq mouse-drag-copy-region t)
+  (setq select-active-regions nil)
+
+  ;; This causes a middle click to paste from the clipboard instead of the primary
+  ;; selection.
+  (global-set-key (kbd "<mouse-2>") 'mouse-yank-at-click)
+)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
