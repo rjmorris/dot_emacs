@@ -278,12 +278,29 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; copy/paste
+
+;; Other Windows applications don't distinguish between the clipboard and the
+;; primary selection, so when Emacs does it's more of a nuisance than a benefit.
+
+(when (eq system-type 'windows-nt)
+  ;; This causes highlighted text to be copied to the clipboard instead of the
+  ;; primary selection.
+  (setq mouse-drag-copy-region t)
+  (setq select-active-regions nil)
+
+  ;; This causes a middle click to paste from the clipboard instead of the primary
+  ;; selection.
+  (global-set-key (kbd "<mouse-2>") 'mouse-yank-at-click)
+)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message nil)
-(tool-bar-mode 0)
-(set-scroll-bar-mode 'right)
+
 (setq column-number-mode t)
 (setq mouse-wheel-progressive-speed nil)
 (setq frame-title-format "%b - emacs")
@@ -320,10 +337,12 @@
 
 
 ;;-------------------------------------------------------------------------------
-;; settings applicable in X
+;; settings applicable only with graphical displays
 
-(if window-system
+(if (display-graphic-p)
     (progn
+      (tool-bar-mode 0)
+      (set-scroll-bar-mode 'right)
       (set-background-color "lightgray")
       (set-foreground-color "black")
       (set-cursor-color "black")
