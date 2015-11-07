@@ -46,6 +46,7 @@
     switch-window
     web-mode
     ess
+    typescript-mode
     ))
 
 (defun required-packages-installed-p ()
