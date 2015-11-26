@@ -54,6 +54,7 @@
     web-mode
     ess
     company
+    flycheck
     typescript-mode
     ))
 
@@ -315,6 +316,15 @@
 
 (global-set-key (kbd "C-<return>") 'dabbrev-expand)
 (global-set-key (kbd "C-S-<return>") 'company-complete)
+
+
+;;-------------------------------------------------------------------------------
+;; syntax checking
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; Check syntax only after saving or after enabling the mode.
+(defvar flycheck-check-syntax-automatically '(save mode-enabled))
 
 
 ;;-------------------------------------------------------------------------------
