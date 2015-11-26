@@ -31,7 +31,14 @@
     (setq package-user-dir "C:/Program Files (x86)/emacs-packages/elpa"))
 
 
+;; By default, installed packages are activated after the init file (that is,
+;; this file) is read. Disable that and instead activate the packages
+;; immediately.
+
+(setq package-enable-at-startup nil)
 (package-initialize)
+
+
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") nil)
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") nil)
 
