@@ -56,6 +56,7 @@
     company
     flycheck
     typescript-mode
+    tide
     ))
 
 (defun required-packages-installed-p ()
@@ -211,6 +212,20 @@
 ;; (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
 ;; (setq js2-highlight-level 0)
+
+
+;;-------------------------------------------------------------------------------
+;; TypeScript
+
+(add-hook 'typescript-mode-hook 'on-typescript-mode t)
+(defun on-typescript-mode ()
+  (tide-setup)
+  ;; flycheck is already enabled globally elsewhere in this config.
+  ;; (flycheck-mode)
+  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode)
+  (company-mode)
+)
 
 
 ;;-------------------------------------------------------------------------------
