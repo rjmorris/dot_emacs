@@ -53,6 +53,7 @@
     switch-window
     web-mode
     ess
+    company
     typescript-mode
     ))
 
@@ -304,6 +305,19 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; auto-completion
+
+(add-hook 'after-init-hook #'global-company-mode)
+
+(setq company-idle-delay nil)
+(setq company-dabbrev-downcase nil)
+(setq company-dabbrev-ignore-case t)
+
+(global-set-key (kbd "C-<return>") 'dabbrev-expand)
+(global-set-key (kbd "C-S-<return>") 'company-complete)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
@@ -404,7 +418,6 @@
 ;;(global-unset-key (kbd "C-x u"))
 (global-set-key (kbd "C-z") 'undo)
 
-(global-set-key (kbd "C-<return>") 'dabbrev-expand)
 (global-set-key (kbd "C-/") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-c r") 'query-replace)
 (global-set-key (kbd "C-c g") 'goto-line)
