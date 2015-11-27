@@ -429,8 +429,9 @@
 
 ;; On Linux, the active region's background color is taken from GTK by default.
 ;; The default color doesn't have enough contrast against the lightgray
-;; background.
-(set-face-attribute 'region nil :background "white")
+;; background. Set the foreground to nil so that the foreground text has the
+;; same face as when it isn't in the active region.
+(set-face-attribute 'region nil :foreground nil :background "white")
 
 
 ;;-------------------------------------------------------------------------------
