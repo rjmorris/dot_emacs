@@ -122,9 +122,9 @@
 
 (add-hook 'cperl-mode-hook 'on-cperl-mode t)
 (defun on-cperl-mode ()
-  ;; This is present in my font-lock section below, but something in the
-  ;; cperl-mode startup must override it. Redo it once cperl is loaded.
-  (copy-face 'default 'cperl-nonoverridable-face)
+  ;; Resetting cperl-mode faces must be performed after the mode has loaded, not
+  ;; in my syntax-highlighting section below.
+  (reset-face 'cperl-nonoverridable-face)
   )
 
 
@@ -133,9 +133,9 @@
 
 (add-hook 'sh-mode-hook 'on-sh-mode t)
 (defun on-sh-mode ()
-  ;; Overriding sh-mode faces in my font-lock section below doesn't work.
-  ;; Apparently they must be overriden in the mode hook.
-  (copy-face 'default 'sh-quoted-exec)
+  ;; Resetting sh-mode faces must be performed after the mode has loaded, not
+  ;; in my syntax-highlighting section below.
+  (reset-face 'sh-quoted-exec)
   )
 
 
@@ -169,32 +169,33 @@
 
 (add-hook 'web-mode-hook 'on-web-mode t)
 (defun on-web-mode ()
-  ;; web-mode faces must be overriden in the mode hook. Only ovveride the ones
-  ;; that don't inherit from another face. (See web-mode.el to figure out which
-  ;; ones inherit and which ones don't.
-  (copy-face 'default 'web-mode-error-face)
-  (copy-face 'default 'web-mode-symbol-face)
-  (copy-face 'default 'web-mode-doctype-face)
-  (copy-face 'default 'web-mode-html-tag-face)
-  (copy-face 'default 'web-mode-html-tag-bracket-face)
-  (copy-face 'default 'web-mode-html-attr-name-face)
-  (copy-face 'default 'web-mode-block-attr-name-face)
-  (copy-face 'default 'web-mode-block-attr-value-face)
-  (copy-face 'default 'web-mode-json-key-face)
-  (copy-face 'default 'web-mode-json-context-face)
-  (copy-face 'default 'web-mode-param-name-face)
-  (copy-face 'default 'web-mode-whitespace-face)
-  (copy-face 'default 'web-mode-inlay-face)
-  (copy-face 'default 'web-mode-block-face)
-  (copy-face 'default 'web-mode-part-face)
-  (copy-face 'default 'web-mode-folded-face)
-  (copy-face 'default 'web-mode-bold-face)
-  (copy-face 'default 'web-mode-italic-face)
-  (copy-face 'default 'web-mode-underline-face)
-  (copy-face 'default 'web-mode-current-element-highlight-face)
-  (copy-face 'default 'web-mode-current-column-highlight-face)
-  (copy-face 'default 'web-mode-comment-keyword-face)
-  (copy-face 'default 'web-mode-sql-keyword-face)
+  ;; Resetting web-mode faces must be performed after the mode has loaded, not
+  ;; in my syntax-highlighting section below. Reset only those that don't
+  ;; inherit from another face. (See web-mode.el to figure out which ones
+  ;; inherit and which ones don't.)
+  (reset-face 'web-mode-error-face)
+  (reset-face 'web-mode-symbol-face)
+  (reset-face 'web-mode-doctype-face)
+  (reset-face 'web-mode-html-tag-face)
+  (reset-face 'web-mode-html-tag-bracket-face)
+  (reset-face 'web-mode-html-attr-name-face)
+  (reset-face 'web-mode-block-attr-name-face)
+  (reset-face 'web-mode-block-attr-value-face)
+  (reset-face 'web-mode-json-key-face)
+  (reset-face 'web-mode-json-context-face)
+  (reset-face 'web-mode-param-name-face)
+  (reset-face 'web-mode-whitespace-face)
+  (reset-face 'web-mode-inlay-face)
+  (reset-face 'web-mode-block-face)
+  (reset-face 'web-mode-part-face)
+  (reset-face 'web-mode-folded-face)
+  (reset-face 'web-mode-bold-face)
+  (reset-face 'web-mode-italic-face)
+  (reset-face 'web-mode-underline-face)
+  (reset-face 'web-mode-current-element-highlight-face)
+  (reset-face 'web-mode-current-column-highlight-face)
+  (reset-face 'web-mode-comment-keyword-face)
+  (reset-face 'web-mode-sql-keyword-face)
 )
 
 
@@ -405,32 +406,61 @@
 
 
 ;;-------------------------------------------------------------------------------
-;; font lock
+;; syntax highlighting
 
-;;(global-font-lock-mode nil)
+;; My goal is to disable almost all syntax highlighting. The primary exception
+;; is comments, but there may be a few others such as syntax errors. To
+;; accomplish this, I will first make all faces match the default face. Then I
+;; will override a few select faces.
+;;
+;; TODO: When I start emacs in a terminal, sometimes the background is dark and
+;; other times it's light. In cases where I'm specifying a color, figure out how
+;; to use a different color when the background is dark and light.
+;;
+;; TODO: Look into creating a custom theme for this.
+
+;; Some modes support limiting the degree of font-lock applied. Take them up on
+;; it. Even less font-lock could be requested by setting this to nil, but some
+;; modes may interpret that as disabling it altogether.
 (setq font-lock-maximum-decoration 1)
 
-(copy-face 'default 'font-lock-comment-face)
-(set-face-foreground 'font-lock-comment-face "RoyalBlue4")
-(copy-face 'default 'font-lock-builtin-face)
-(copy-face 'default 'font-lock-constant-face)
-(copy-face 'default 'font-lock-function-name-face)
-(copy-face 'default 'font-lock-keyword-face)
-(copy-face 'default 'font-lock-string-face)
-(copy-face 'default 'font-lock-type-face)
-(copy-face 'default 'font-lock-variable-name-face)
-(copy-face 'default 'font-lock-warning-face)
+;; Define a function to "reset" a face. This tries to make the face a copy of
+;; the default face.
+;;
+;; Note that I previously used the copy-face function to copy the default face
+;; to the target face. However, it didn't work well in the terminal, where the
+;; default face's foreground and background have the value 'unspecified.
+;; copy-face doesn't appear to copy 'unspecified to the target face, so the
+;; target face's initial foreground and background colors were unchanged.
+(defun reset-face (face)
+  (set-face-attribute face nil
+                      :inherit 'default
+                      :foreground 'unspecified
+                      :background 'unspecified
+                      :weight 'unspecified
+                      )
+)
 
-(copy-face 'default 'cperl-nonoverridable-face)
+(reset-face 'font-lock-builtin-face)
+(reset-face 'font-lock-comment-face)
+(set-face-attribute 'font-lock-comment-face nil :foreground "RoyalBlue4")
+(reset-face 'font-lock-constant-face)
+(reset-face 'font-lock-function-name-face)
+(reset-face 'font-lock-keyword-face)
+(reset-face 'font-lock-string-face)
+(reset-face 'font-lock-type-face)
+(reset-face 'font-lock-variable-name-face)
+(reset-face 'font-lock-warning-face)
 
-(copy-face 'default 'comint-highlight-prompt)
-(set-face-bold-p 'comint-highlight-prompt t)
-(copy-face 'default 'comint-highlight-input)
+(reset-face 'comint-highlight-prompt)
+(set-face-attribute 'comint-highlight-prompt nil :weight 'bold)
+(reset-face 'comint-highlight-input)
 
 ;; On Linux, the active region's background color is taken from GTK by default.
 ;; The default color doesn't have enough contrast against the lightgray
 ;; background. Set the foreground to nil so that the foreground text has the
 ;; same face as when it isn't in the active region.
+(reset-face 'region)
 (set-face-attribute 'region nil :foreground nil :background "white")
 
 
