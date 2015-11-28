@@ -196,6 +196,10 @@
   (reset-face 'web-mode-current-column-highlight-face)
   (reset-face 'web-mode-comment-keyword-face)
   (reset-face 'web-mode-sql-keyword-face)
+
+  ;; web-mode has its own comment/uncomment command. Attach it to the same
+  ;; keybinding I use for the general version.
+  (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
 )
 
 
