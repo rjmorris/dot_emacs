@@ -415,7 +415,7 @@
       (if (eq system-type 'windows-nt)
           ;;(set-default-font "DejaVu Sans Mono-10")
           ;;(set-default-font "Courier New-10")
-          (set-default-font "Source Code Pro Light-10")
+          (set-default-font "Source Code Pro-10")
         (set-default-font "Office Code Pro Light-10"))
       )
 )
