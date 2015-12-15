@@ -150,6 +150,14 @@
   ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
   ;; terminal and GUI, but <return> works only in the GUI.
   (local-set-key (kbd "RET") 'newline)
+
+  ;; Override ESS's binding of Ctrl-Return. I have it mapped to dabbrev-expand
+  ;; below, but ESS maps it to ess-eval-region-or-line-and-step. That's a fairly
+  ;; useful function, though, so consider binding it to something else.
+  ;;
+  ;; Note that in this case, C-RET doesn't work. (See the comments for the
+  ;; rebinding of RET above.)
+  (local-unset-key (kbd "C-<return>"))
 )
 
 
