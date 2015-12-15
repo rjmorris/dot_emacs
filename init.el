@@ -140,6 +140,10 @@
 ;; Don't replace _ with <-
 (ess-toggle-underscore nil)
 
+;; Provide command line arguments to R when starting it. --no-save disables the
+;; prompt to save the history when quitting R.
+(setq inferior-R-args "--no-restore --no-save")
+
 (add-hook 'ess-mode-hook 'on-ess-mode t)
 (defun on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
