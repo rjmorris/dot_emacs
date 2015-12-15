@@ -233,7 +233,7 @@
 ;; GitHub if python-markdown turns out not to be satisfactory for GitHub. Also
 ;; note that readme files can be edited directly on the GitHub and BitBucket
 ;; websites.
-(setq markdown-command "python3 -m markdown")
+(setq markdown-command (concat "python -m markdown -x markdown.extensions.codehilite -c " (expand-file-name "~/.emacs.d/python-markdown-options.json")))
 
 ;; gfm is GitHub-flavored Markdown. There is also markdown-mode for regular
 ;; Markdown. I'm not aware of a BitBucket-specific Markdown mode.
