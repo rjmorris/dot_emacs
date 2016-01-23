@@ -152,12 +152,52 @@
 ;; Don't replace _ with <-
 (ess-toggle-underscore nil)
 
+;; Function to start an R process and set up the emacs windows with the source
+;; file on the left and the R process on the right.
+(defun rjm/set-up-r-environment ()
+  (interactive)
+  (delete-other-windows)
+  (setq w1 (selected-window))
+  (setq w1name (buffer-name))
+  (setq w2 (split-window w1 nil t))
+  (R)
+  (set-window-buffer w2 "*R*")
+  (set-window-buffer w1 w1name))
+
+;; "Smart" evaluation function:
+;;   If an R process hasn't been started, start it.
+;;   Else, if a region is active, evaluate the region.
+;;   Else, if inside a function definition, evaluate the function.
+;;   Else, evaluate the current line.
+(defun rjm/smart-r-eval ()
+  (interactive)
+  (cond
+   ((not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
+    (rjm/set-up-r-environment))
+   ((and transient-mark-mode mark-active)
+    (call-interactively 'ess-eval-region))
+   ((ess-beginning-of-function 'no-error)
+    (call-interactively 'ess-eval-function)
+    (ess-goto-end-of-function-or-para)
+    (ess-next-code-line))
+   (t
+    (call-interactively 'ess-eval-line-and-step))))
+
 (add-hook 'ess-mode-hook 'on-ess-mode t)
 (defun on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
   ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
   ;; terminal and GUI, but <return> works only in the GUI.
   (local-set-key (kbd "RET") 'newline)
+
+  ;; Override ESS's binding of C-Return. It's set to
+  ;; ess-eval-region-or-line-and-step by default. Contrary to the comment about
+  ;; the "RET" keybinding, note that "C-RET" doesn't work in the GUI or the
+  ;; terminal, so just use the more standard "C-<return>". This doesn't work in
+  ;; the terminal, but at least it works in the GUI.
+  (local-set-key (kbd "C-<return>") #'dabbrev-expand)
+
+  (local-set-key (kbd "<f8>") #'rjm/smart-r-eval)
 )
 
 
