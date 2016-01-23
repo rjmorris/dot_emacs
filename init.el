@@ -57,6 +57,7 @@
     flycheck
     typescript-mode
     tide
+    smart-compile
     ))
 
 (defun required-packages-installed-p ()
@@ -155,6 +156,37 @@
 ;; prompt to save the history when quitting R.
 (setq inferior-R-args "--no-restore --no-save")
 
+;; Function to start an R process and set up the emacs windows with the source
+;; file on the left and the R process on the right.
+(defun rjm/set-up-r-environment ()
+  (interactive)
+  (delete-other-windows)
+  (setq w1 (selected-window))
+  (setq w1name (buffer-name))
+  (setq w2 (split-window w1 nil t))
+  (R)
+  (set-window-buffer w2 "*R*")
+  (set-window-buffer w1 w1name))
+
+;; "Smart" evaluation function:
+;;   If an R process hasn't been started, start it.
+;;   Else, if a region is active, evaluate the region.
+;;   Else, if inside a function definition, evaluate the function.
+;;   Else, evaluate the current line.
+(defun rjm/smart-r-eval ()
+  (interactive)
+  (cond
+   ((not (member "*R*" (mapcar (function buffer-name) (buffer-list))))
+    (rjm/set-up-r-environment))
+   ((and transient-mark-mode mark-active)
+    (call-interactively 'ess-eval-region))
+   ((ess-beginning-of-function 'no-error)
+    (call-interactively 'ess-eval-function)
+    (ess-goto-end-of-function-or-para)
+    (ess-next-code-line))
+   (t
+    (call-interactively 'ess-eval-line-and-step))))
+
 (add-hook 'ess-mode-hook 'on-ess-mode t)
 (defun on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
@@ -162,13 +194,14 @@
   ;; terminal and GUI, but <return> works only in the GUI.
   (local-set-key (kbd "RET") 'newline)
 
-  ;; Override ESS's binding of Ctrl-Return. I have it mapped to dabbrev-expand
-  ;; below, but ESS maps it to ess-eval-region-or-line-and-step. That's a fairly
-  ;; useful function, though, so consider binding it to something else.
-  ;;
-  ;; Note that in this case, C-RET doesn't work. (See the comments for the
-  ;; rebinding of RET above.)
-  (local-unset-key (kbd "C-<return>"))
+  ;; Override ESS's binding of C-Return. It's set to
+  ;; ess-eval-region-or-line-and-step by default. Contrary to the comment about
+  ;; the "RET" keybinding, note that "C-RET" doesn't work in the GUI or the
+  ;; terminal, so just use the more standard "C-<return>". This doesn't work in
+  ;; the terminal, but at least it works in the GUI.
+  (local-set-key (kbd "C-<return>") #'dabbrev-expand)
+
+  (local-set-key (kbd "<f8>") #'rjm/smart-r-eval)
 )
 
 
@@ -237,9 +270,7 @@
 (add-hook 'typescript-mode-hook 'on-typescript-mode t)
 (defun on-typescript-mode ()
   (tide-setup)
-  ;; flycheck is already enabled globally elsewhere in this config.
-  ;; (flycheck-mode)
-  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (flycheck-mode)
   (eldoc-mode)
   (company-mode)
 )
@@ -342,6 +373,30 @@
 
 (add-hook 'after-init-hook #'global-company-mode)
 
+;; When looking for replacement candidates, ignore case. (Setting this variable
+;; isn't strictly necessary, because it defaults to the value of case-fold-search,
+;; which is t by default. However, set it anyway just to be explicit.) For
+(setq dabbrev-case-fold-search t)
+
+;; When looking for replacement candidates, ignore case only if the abbreviation
+;; contains all lowercase letters. If it contains any uppercase letters, case is
+;; significant.
+(setq dabbrev-upcase-means-case-search t)
+
+;; If replacement candidates differ only in case, treat them as distinct
+;; candidates.
+(setq dabbrev-case-distinction nil)
+
+;; When applying a replacement, preserve the replacement's case. That is, don't
+;; modify the replacement's case by applying the abbreviation's case pattern to
+;; it. For example:
+;;
+;;   dabbrev-case-replace  abbreviation  replacement    expansion
+;;   --------------------  ------------  -------------  -------------
+;;           t                sor        SortDirection  sortdirection
+;;          nil               sor        SortDirection  SortDirection
+(setq dabbrev-case-replace nil)
+
 (setq company-idle-delay nil)
 (setq company-dabbrev-downcase nil)
 (setq company-dabbrev-ignore-case t)
@@ -353,10 +408,32 @@
 ;;-------------------------------------------------------------------------------
 ;; syntax checking
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; Check syntax only after saving or after enabling the mode.
+;; Check syntax only after saving the file or after enabling the mode.
 (defvar flycheck-check-syntax-automatically '(save mode-enabled))
+
+
+;;-------------------------------------------------------------------------------
+;; compiling
+
+(require 'smart-compile)
+(add-to-list 'smart-compile-alist '(typescript-mode . "tsc"))
+
+(setq compilation-read-command nil)
+
+(global-set-key (kbd "<f5>") 'smart-compile)
+
+
+;;-------------------------------------------------------------------------------
+;; command interpreters (like the shell, R console, etc.)
+
+(setq-default comint-scroll-to-bottom-on-output t)
+
+;; Rebind the history navigation keys to show only those commands that match
+;; what's currently entered at the prompt.
+(define-key comint-mode-map (kbd "C-<up>") #'comint-previous-matching-input-from-input)
+(define-key comint-mode-map (kbd "C-<down>") #'comint-next-matching-input-from-input)
+(define-key comint-mode-map (kbd "M-p") #'comint-previous-matching-input-from-input)
+(define-key comint-mode-map (kbd "M-n") #'comint-next-matching-input-from-input)
 
 
 ;;-------------------------------------------------------------------------------
@@ -377,8 +454,6 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-separator ":")
-
-(setq-default comint-scroll-to-bottom-on-output t)
 
 ;; If set to non-nil, PageUp when you're close to the top of the buffer moves
 ;; point to the top of the buffer. If nil, point doesn't move and Emacs gives an
