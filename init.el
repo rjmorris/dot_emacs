@@ -226,9 +226,7 @@
 (add-hook 'typescript-mode-hook 'on-typescript-mode t)
 (defun on-typescript-mode ()
   (tide-setup)
-  ;; flycheck is already enabled globally elsewhere in this config.
-  ;; (flycheck-mode)
-  ;; (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (flycheck-mode)
   (eldoc-mode)
   (company-mode)
 )
@@ -366,9 +364,7 @@
 ;;-------------------------------------------------------------------------------
 ;; syntax checking
 
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; Check syntax only after saving or after enabling the mode.
+;; Check syntax only after saving the file or after enabling the mode.
 (defvar flycheck-check-syntax-automatically '(save mode-enabled))
 
 
