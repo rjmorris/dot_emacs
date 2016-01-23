@@ -380,6 +380,19 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; command interpreters (like the shell, R console, etc.)
+
+(setq-default comint-scroll-to-bottom-on-output t)
+
+;; Rebind the history navigation keys to show only those commands that match
+;; what's currently entered at the prompt.
+(define-key comint-mode-map (kbd "C-<up>") #'comint-previous-matching-input-from-input)
+(define-key comint-mode-map (kbd "C-<down>") #'comint-next-matching-input-from-input)
+(define-key comint-mode-map (kbd "M-p") #'comint-previous-matching-input-from-input)
+(define-key comint-mode-map (kbd "M-n") #'comint-next-matching-input-from-input)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
@@ -397,8 +410,6 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'reverse)
 (setq uniquify-separator ":")
-
-(setq-default comint-scroll-to-bottom-on-output t)
 
 ;; If set to non-nil, PageUp when you're close to the top of the buffer moves
 ;; point to the top of the buffer. If nil, point doesn't move and Emacs gives an
