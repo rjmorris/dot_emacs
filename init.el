@@ -331,6 +331,30 @@
 
 (add-hook 'after-init-hook #'global-company-mode)
 
+;; When looking for replacement candidates, ignore case. (Setting this variable
+;; isn't strictly necessary, because it defaults to the value of case-fold-search,
+;; which is t by default. However, set it anyway just to be explicit.) For
+(setq dabbrev-case-fold-search t)
+
+;; When looking for replacement candidates, ignore case only if the abbreviation
+;; contains all lowercase letters. If it contains any uppercase letters, case is
+;; significant.
+(setq dabbrev-upcase-means-case-search t)
+
+;; If replacement candidates differ only in case, treat them as distinct
+;; candidates.
+(setq dabbrev-case-distinction nil)
+
+;; When applying a replacement, preserve the replacement's case. That is, don't
+;; modify the replacement's case by applying the abbreviation's case pattern to
+;; it. For example:
+;;
+;;   dabbrev-case-replace  abbreviation  replacement    expansion
+;;   --------------------  ------------  -------------  -------------
+;;           t                sor        SortDirection  sortdirection
+;;          nil               sor        SortDirection  SortDirection
+(setq dabbrev-case-replace nil)
+
 (setq company-idle-delay nil)
 (setq company-dabbrev-downcase nil)
 (setq company-dabbrev-ignore-case t)
