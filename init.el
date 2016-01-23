@@ -57,6 +57,7 @@
     flycheck
     typescript-mode
     tide
+    smart-compile
     ))
 
 (defun required-packages-installed-p ()
@@ -345,6 +346,17 @@
 
 ;; Check syntax only after saving or after enabling the mode.
 (defvar flycheck-check-syntax-automatically '(save mode-enabled))
+
+
+;;-------------------------------------------------------------------------------
+;; compiling
+
+(require 'smart-compile)
+(add-to-list 'smart-compile-alist '(typescript-mode . "tsc"))
+
+(setq compilation-read-command nil)
+
+(global-set-key (kbd "<f5>") 'smart-compile)
 
 
 ;;-------------------------------------------------------------------------------
