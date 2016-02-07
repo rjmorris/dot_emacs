@@ -84,6 +84,14 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; themes section
+
+(add-to-list 'custom-theme-load-path (concat user-emacs-directory "themes"))
+
+(load-theme 'commentator t)
+
+
+;;-------------------------------------------------------------------------------
 ;; CC-mode section
 
 (setq-default c-basic-offset 4)
@@ -123,9 +131,6 @@
 
 (add-hook 'cperl-mode-hook 'on-cperl-mode t)
 (defun on-cperl-mode ()
-  ;; Resetting cperl-mode faces must be performed after the mode has loaded, not
-  ;; in my syntax-highlighting section below.
-  (reset-face 'cperl-nonoverridable-face)
   )
 
 
@@ -134,9 +139,6 @@
 
 (add-hook 'sh-mode-hook 'on-sh-mode t)
 (defun on-sh-mode ()
-  ;; Resetting sh-mode faces must be performed after the mode has loaded, not
-  ;; in my syntax-highlighting section below.
-  (reset-face 'sh-quoted-exec)
   )
 
 
@@ -214,34 +216,6 @@
 
 (add-hook 'web-mode-hook 'on-web-mode t)
 (defun on-web-mode ()
-  ;; Resetting web-mode faces must be performed after the mode has loaded, not
-  ;; in my syntax-highlighting section below. Reset only those that don't
-  ;; inherit from another face. (See web-mode.el to figure out which ones
-  ;; inherit and which ones don't.)
-  (reset-face 'web-mode-error-face)
-  (reset-face 'web-mode-symbol-face)
-  (reset-face 'web-mode-doctype-face)
-  (reset-face 'web-mode-html-tag-face)
-  (reset-face 'web-mode-html-tag-bracket-face)
-  (reset-face 'web-mode-html-attr-name-face)
-  (reset-face 'web-mode-block-attr-name-face)
-  (reset-face 'web-mode-block-attr-value-face)
-  (reset-face 'web-mode-json-key-face)
-  (reset-face 'web-mode-json-context-face)
-  (reset-face 'web-mode-param-name-face)
-  (reset-face 'web-mode-whitespace-face)
-  (reset-face 'web-mode-inlay-face)
-  (reset-face 'web-mode-block-face)
-  (reset-face 'web-mode-part-face)
-  (reset-face 'web-mode-folded-face)
-  (reset-face 'web-mode-bold-face)
-  (reset-face 'web-mode-italic-face)
-  (reset-face 'web-mode-underline-face)
-  (reset-face 'web-mode-current-element-highlight-face)
-  (reset-face 'web-mode-current-column-highlight-face)
-  (reset-face 'web-mode-comment-keyword-face)
-  (reset-face 'web-mode-sql-keyword-face)
-
   ;; web-mode has its own comment/uncomment command. Attach it to the same
   ;; keybinding I use for the general version.
   (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
@@ -494,65 +468,6 @@
         (set-default-font "Office Code Pro Light-10"))
       )
 )
-
-
-;;-------------------------------------------------------------------------------
-;; syntax highlighting
-
-;; My goal is to disable almost all syntax highlighting. The primary exception
-;; is comments, but there may be a few others such as syntax errors. To
-;; accomplish this, I will first make all faces match the default face. Then I
-;; will override a few select faces.
-;;
-;; TODO: When I start emacs in a terminal, sometimes the background is dark and
-;; other times it's light. In cases where I'm specifying a color, figure out how
-;; to use a different color when the background is dark and light.
-;;
-;; TODO: Look into creating a custom theme for this.
-
-;; Some modes support limiting the degree of font-lock applied. Take them up on
-;; it. Even less font-lock could be requested by setting this to nil, but some
-;; modes may interpret that as disabling it altogether.
-(setq font-lock-maximum-decoration 1)
-
-;; Define a function to "reset" a face. This tries to make the face a copy of
-;; the default face.
-;;
-;; Note that I previously used the copy-face function to copy the default face
-;; to the target face. However, it didn't work well in the terminal, where the
-;; default face's foreground and background have the value 'unspecified.
-;; copy-face doesn't appear to copy 'unspecified to the target face, so the
-;; target face's initial foreground and background colors were unchanged.
-(defun reset-face (face)
-  (set-face-attribute face nil
-                      :inherit 'default
-                      :foreground 'unspecified
-                      :background 'unspecified
-                      :weight 'unspecified
-                      )
-)
-
-(reset-face 'font-lock-builtin-face)
-(reset-face 'font-lock-comment-face)
-(set-face-attribute 'font-lock-comment-face nil :foreground "RoyalBlue4")
-(reset-face 'font-lock-constant-face)
-(reset-face 'font-lock-function-name-face)
-(reset-face 'font-lock-keyword-face)
-(reset-face 'font-lock-string-face)
-(reset-face 'font-lock-type-face)
-(reset-face 'font-lock-variable-name-face)
-(reset-face 'font-lock-warning-face)
-
-(reset-face 'comint-highlight-prompt)
-(set-face-attribute 'comint-highlight-prompt nil :weight 'bold)
-(reset-face 'comint-highlight-input)
-
-;; On Linux, the active region's background color is taken from GTK by default.
-;; The default color doesn't have enough contrast against the lightgray
-;; background. Set the foreground to nil so that the foreground text has the
-;; same face as when it isn't in the active region.
-(reset-face 'region)
-(set-face-attribute 'region nil :foreground nil :background "white")
 
 
 ;;-------------------------------------------------------------------------------
