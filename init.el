@@ -107,6 +107,38 @@
 ;;           (lambda()
 ;;             (electric-indent-local-mode 0)))
 
+;; Function to start a Python process and set up the emacs windows with the
+;; source file on the left and the Python process on the right.
+(defun rjm/set-up-python-environment ()
+  (interactive)
+  (delete-other-windows)
+  (setq w1 (selected-window))
+  (setq w1name (buffer-name))
+  (setq w2 (split-window w1 nil t))
+  (let ((current-prefix-arg '(1)))
+    (call-interactively 'run-python))
+  (set-window-buffer w2 "*Python*")
+  (set-window-buffer w1 w1name))
+
+;; "Smart" evaluation function:
+;;   If a Python process hasn't been started, start it.
+;;   Else, if a region is active, evaluate the region.
+;;   Else, evaluate the current line.
+(defun rjm/smart-python-eval ()
+  (interactive)
+  (cond
+   ((not (member "*Python*" (mapcar (function buffer-name) (buffer-list))))
+    (rjm/set-up-python-environment))
+   ((region-active-p)
+    (call-interactively 'python-shell-send-region))
+   (t
+    (python-shell-send-region (line-beginning-position) (line-end-position)))))
+
+(add-hook 'python-mode-hook 'rjm/on-python-mode t)
+(defun rjm/on-python-mode ()
+  (local-set-key (kbd "<f8>") #'rjm/smart-python-eval)
+)
+
 
 ;;-------------------------------------------------------------------------------
 ;; Perl section
