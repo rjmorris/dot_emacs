@@ -480,6 +480,9 @@
 ;; probably better to change it in the mode hook instead of globally here.
 ;; (setq mode-require-final-newline nil)
 
+;; When a file changes on disk, update the buffer to reflect the new contents.
+(global-auto-revert-mode)
+
 
 ;;-------------------------------------------------------------------------------
 ;; settings applicable only with graphical displays
