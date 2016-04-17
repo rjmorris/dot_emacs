@@ -487,6 +487,23 @@
 ;;-------------------------------------------------------------------------------
 ;; settings applicable only with graphical displays
 
+
+(setq rjm/font-candidates
+      '(
+        "Office Code Pro Light-10"
+        "Source Code Pro Light-10"
+        "DejaVu Sans Mono-10"
+        "Courier New-10"
+        ))
+
+(defun rjm/set-first-available-font (fonts)
+  "Set the font to the first available from the list of candidates."
+  (loop for font in fonts
+        when (x-list-fonts font)
+        do (progn
+             (set-frame-font font)
+             (return))))
+
 (if (display-graphic-p)
     (progn
       (tool-bar-mode 0)
@@ -495,14 +512,8 @@
       (set-foreground-color "black")
       (set-cursor-color "black")
       (set-mouse-color "black")
-      ;;(set-default-font "7x13")
-      (if (eq system-type 'windows-nt)
-          ;;(set-default-font "DejaVu Sans Mono-10")
-          ;;(set-default-font "Courier New-10")
-          (set-default-font "Source Code Pro-10")
-        (set-default-font "Office Code Pro Light-10"))
-      )
-)
+      (rjm/set-first-available-font rjm/font-candidates)
+      ))
 
 
 ;;-------------------------------------------------------------------------------
