@@ -162,16 +162,16 @@
 ;; Disable the highlighting of trailing whitespace with underscores.
 (setq cperl-invalid-face nil)
 
-(add-hook 'cperl-mode-hook 'on-cperl-mode t)
-(defun on-cperl-mode ()
+(add-hook 'cperl-mode-hook 'rjm/on-cperl-mode t)
+(defun rjm/on-cperl-mode ()
   )
 
 
 ;;-------------------------------------------------------------------------------
 ;; SH section
 
-(add-hook 'sh-mode-hook 'on-sh-mode t)
-(defun on-sh-mode ()
+(add-hook 'sh-mode-hook 'rjm/on-sh-mode t)
+(defun rjm/on-sh-mode ()
   )
 
 
@@ -222,8 +222,8 @@
    (t
     (call-interactively 'ess-eval-line-and-step))))
 
-(add-hook 'ess-mode-hook 'on-ess-mode t)
-(defun on-ess-mode ()
+(add-hook 'ess-mode-hook 'rjm/on-ess-mode t)
+(defun rjm/on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
   ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
   ;; terminal and GUI, but <return> works only in the GUI.
@@ -247,8 +247,8 @@
 (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.thtml$" . web-mode))
 
-(add-hook 'web-mode-hook 'on-web-mode t)
-(defun on-web-mode ()
+(add-hook 'web-mode-hook 'rjm/on-web-mode t)
+(defun rjm/on-web-mode ()
   ;; web-mode has its own comment/uncomment command. Attach it to the same
   ;; keybinding I use for the general version.
   (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
@@ -274,8 +274,8 @@
 ;;-------------------------------------------------------------------------------
 ;; TypeScript
 
-(add-hook 'typescript-mode-hook 'on-typescript-mode t)
-(defun on-typescript-mode ()
+(add-hook 'typescript-mode-hook 'rjm/on-typescript-mode t)
+(defun rjm/on-typescript-mode ()
   (tide-setup)
   (flycheck-mode)
   (eldoc-mode)
