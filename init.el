@@ -58,6 +58,7 @@
     typescript-mode
     tide
     smart-compile
+    smex
     ))
 
 (defun required-packages-installed-p ()
@@ -440,6 +441,19 @@
 (define-key comint-mode-map (kbd "C-<down>") #'comint-next-matching-input-from-input)
 (define-key comint-mode-map (kbd "M-p") #'comint-previous-matching-input-from-input)
 (define-key comint-mode-map (kbd "M-n") #'comint-next-matching-input-from-input)
+
+
+;;-------------------------------------------------------------------------------
+;; Smex
+
+(smex-initialize)
+
+(global-set-key (kbd "M-x") 'smex)
+;; Rebind the original M-x just in case.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; Number of recent commands shown at the beginning of the list.
+(setq smex-history-length 3)
 
 
 ;;-------------------------------------------------------------------------------
