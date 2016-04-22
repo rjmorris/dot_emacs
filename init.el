@@ -59,6 +59,7 @@
     tide
     smart-compile
     smex
+    visual-regexp
     ))
 
 (defun required-packages-installed-p ()
@@ -457,6 +458,16 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; search and replace
+
+(global-set-key (kbd "C-c r") 'query-replace)
+
+;; Use this in place of query-replace-regexp for visual feedback of matches and
+;; replacements.
+(global-set-key (kbd "C-c R") 'vr/query-replace)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
@@ -541,7 +552,6 @@
 (global-set-key (kbd "C-z") 'undo)
 
 (global-set-key (kbd "C-/") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c r") 'query-replace)
 (global-set-key (kbd "C-c g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell)
 (global-set-key (kbd "C-c k") 'kill-this-buffer)
