@@ -192,6 +192,13 @@
 ;; prompt to save the history when quitting R.
 (setq inferior-R-args "--no-restore --no-save")
 
+;; Override some of the indentation settings. Be sure to change
+;; ess-default-style to OWN so that ESS will pick up my indentation settings
+;; instead of using the ones from a built-in style.
+(setq ess-first-continued-statement-offset 4)
+(setq ess-continued-statement-offset 0)
+(setq ess-default-style 'OWN)
+
 ;; Function to start an R process and set up the emacs windows with the source
 ;; file on the left and the R process on the right.
 (defun rjm/set-up-r-environment ()
