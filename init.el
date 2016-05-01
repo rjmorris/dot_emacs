@@ -51,7 +51,9 @@
   '(markdown-mode
     rainbow-mode
     switch-window
-    web-mode
+    ;; web-mode
+    ;; multi-web-mode
+    mmm-mode
     ess
     company
     flycheck
@@ -251,16 +253,39 @@
 ;;-------------------------------------------------------------------------------
 ;; HTML section
 
-(autoload 'web-mode "web-mode")
-(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.thtml$" . web-mode))
+;; The biggest issue with HTML files is that they often have HTML, CSS, and JS
+;; all embedded within them. I've tried a few different approaches for dealing
+;; with this. I'm saving my config for the inactive approaches in case I want to
+;; go back to them later.
 
-(add-hook 'web-mode-hook 'rjm/on-web-mode t)
-(defun rjm/on-web-mode ()
-  ;; web-mode has its own comment/uncomment command. Attach it to the same
-  ;; keybinding I use for the general version.
-  (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
-)
+;; ;; web-mode: A major mode that handles HTML/CSS/JS natively instead of using
+;; ;; existing emacs modes. Negative: Keybinding/indentation doesn't work the
+;; ;; same way as in standalone js-mode or css-mode.
+;; (autoload 'web-mode "web-mode")
+;; (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.thtml$" . web-mode))
+;; (add-hook 'web-mode-hook 'rjm/on-web-mode t)
+;; (defun rjm/on-web-mode ()
+;;   ;; web-mode has its own comment/uncomment command. Attach it to the same
+;;   ;; keybinding I use for the general version.
+;;   (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
+;; )
+
+;; ;; multi-web-mode: Switches to existing emacs modes when in regions defined
+;; ;; by a regex. Negative: Switching is slower than mmm-mode.
+;; (setq mweb-default-major-mode 'html-mode)
+;; (setq mweb-tags '((js-mode "<script[^>]*>" "</script>")
+;;                   (css-mode "<style[^>]*>" "</style>")))
+;; (setq mweb-filename-extensions '("htm" "html" "thtml"))
+;; (multi-web-global-mode 1)
+
+;; mmm-mode: Switches to existing emacs modes when in regions defined
+;; by a regex.
+(require 'mmm-auto)
+(setq mmm-global-mode 'maybe)
+(setq mmm-submode-decoration-level 0)
+(mmm-add-mode-ext-class 'html-mode nil 'html-js)
+(mmm-add-mode-ext-class 'html-mode nil 'html-css)
 
 
 ;;-------------------------------------------------------------------------------
