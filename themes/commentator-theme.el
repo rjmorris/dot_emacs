@@ -44,6 +44,7 @@
 
    `(cperl-nonoverridable-face ((,class (:foreground ,fg :background ,bg))))
    `(cperl-array-face ((,class (:foreground ,fg :background ,bg))))
+   `(cperl-hash-face ((,class (:foreground ,fg :background ,bg))))
 
    `(web-mode-error-face ((,class (:foreground ,fg :background ,bg))))
    `(web-mode-symbol-face ((,class (:foreground ,fg :background ,bg))))
