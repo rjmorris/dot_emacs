@@ -51,13 +51,17 @@
   '(markdown-mode
     rainbow-mode
     switch-window
-    web-mode
+    ;; web-mode
+    ;; multi-web-mode
+    mmm-mode
     ess
     company
     flycheck
     typescript-mode
     tide
     smart-compile
+    smex
+    visual-regexp
     ))
 
 (defun required-packages-installed-p ()
@@ -161,16 +165,16 @@
 ;; Disable the highlighting of trailing whitespace with underscores.
 (setq cperl-invalid-face nil)
 
-(add-hook 'cperl-mode-hook 'on-cperl-mode t)
-(defun on-cperl-mode ()
+(add-hook 'cperl-mode-hook 'rjm/on-cperl-mode t)
+(defun rjm/on-cperl-mode ()
   )
 
 
 ;;-------------------------------------------------------------------------------
 ;; SH section
 
-(add-hook 'sh-mode-hook 'on-sh-mode t)
-(defun on-sh-mode ()
+(add-hook 'sh-mode-hook 'rjm/on-sh-mode t)
+(defun rjm/on-sh-mode ()
   )
 
 
@@ -189,6 +193,13 @@
 ;; Provide command line arguments to R when starting it. --no-save disables the
 ;; prompt to save the history when quitting R.
 (setq inferior-R-args "--no-restore --no-save")
+
+;; Override some of the indentation settings. Be sure to change
+;; ess-default-style to OWN so that ESS will pick up my indentation settings
+;; instead of using the ones from a built-in style.
+(setq ess-first-continued-statement-offset 4)
+(setq ess-continued-statement-offset 0)
+(setq ess-default-style 'OWN)
 
 ;; Function to start an R process and set up the emacs windows with the source
 ;; file on the left and the R process on the right.
@@ -221,8 +232,8 @@
    (t
     (call-interactively 'ess-eval-line-and-step))))
 
-(add-hook 'ess-mode-hook 'on-ess-mode t)
-(defun on-ess-mode ()
+(add-hook 'ess-mode-hook 'rjm/on-ess-mode t)
+(defun rjm/on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
   ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
   ;; terminal and GUI, but <return> works only in the GUI.
@@ -242,16 +253,39 @@
 ;;-------------------------------------------------------------------------------
 ;; HTML section
 
-(autoload 'web-mode "web-mode")
-(add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.thtml$" . web-mode))
+;; The biggest issue with HTML files is that they often have HTML, CSS, and JS
+;; all embedded within them. I've tried a few different approaches for dealing
+;; with this. I'm saving my config for the inactive approaches in case I want to
+;; go back to them later.
 
-(add-hook 'web-mode-hook 'on-web-mode t)
-(defun on-web-mode ()
-  ;; web-mode has its own comment/uncomment command. Attach it to the same
-  ;; keybinding I use for the general version.
-  (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
-)
+;; ;; web-mode: A major mode that handles HTML/CSS/JS natively instead of using
+;; ;; existing emacs modes. Negative: Keybinding/indentation doesn't work the
+;; ;; same way as in standalone js-mode or css-mode.
+;; (autoload 'web-mode "web-mode")
+;; (add-to-list 'auto-mode-alist '("\\.html$" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.thtml$" . web-mode))
+;; (add-hook 'web-mode-hook 'rjm/on-web-mode t)
+;; (defun rjm/on-web-mode ()
+;;   ;; web-mode has its own comment/uncomment command. Attach it to the same
+;;   ;; keybinding I use for the general version.
+;;   (local-set-key (kbd "C-/") 'web-mode-comment-or-uncomment)
+;; )
+
+;; ;; multi-web-mode: Switches to existing emacs modes when in regions defined
+;; ;; by a regex. Negative: Switching is slower than mmm-mode.
+;; (setq mweb-default-major-mode 'html-mode)
+;; (setq mweb-tags '((js-mode "<script[^>]*>" "</script>")
+;;                   (css-mode "<style[^>]*>" "</style>")))
+;; (setq mweb-filename-extensions '("htm" "html" "thtml"))
+;; (multi-web-global-mode 1)
+
+;; mmm-mode: Switches to existing emacs modes when in regions defined
+;; by a regex.
+(require 'mmm-auto)
+(setq mmm-global-mode 'maybe)
+(setq mmm-submode-decoration-level 0)
+(mmm-add-mode-ext-class 'html-mode nil 'html-js)
+(mmm-add-mode-ext-class 'html-mode nil 'html-css)
 
 
 ;;-------------------------------------------------------------------------------
@@ -273,8 +307,8 @@
 ;;-------------------------------------------------------------------------------
 ;; TypeScript
 
-(add-hook 'typescript-mode-hook 'on-typescript-mode t)
-(defun on-typescript-mode ()
+(add-hook 'typescript-mode-hook 'rjm/on-typescript-mode t)
+(defun rjm/on-typescript-mode ()
   (tide-setup)
   (flycheck-mode)
   (eldoc-mode)
@@ -443,6 +477,29 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; Smex
+
+(smex-initialize)
+
+(global-set-key (kbd "M-x") 'smex)
+;; Rebind the original M-x just in case.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+;; Number of recent commands shown at the beginning of the list.
+(setq smex-history-length 3)
+
+
+;;-------------------------------------------------------------------------------
+;; search and replace
+
+(global-set-key (kbd "C-c r") 'query-replace)
+
+;; Use this in place of query-replace-regexp for visual feedback of matches and
+;; replacements.
+(global-set-key (kbd "C-c R") 'vr/query-replace)
+
+
+;;-------------------------------------------------------------------------------
 ;; miscellaneous section
 
 (setq inhibit-splash-screen t)
@@ -487,6 +544,23 @@
 ;;-------------------------------------------------------------------------------
 ;; settings applicable only with graphical displays
 
+
+(setq rjm/font-candidates
+      '(
+        "Office Code Pro Light-10"
+        "Source Code Pro Light-10"
+        "DejaVu Sans Mono-10"
+        "Courier New-10"
+        ))
+
+(defun rjm/set-first-available-font (fonts)
+  "Set the font to the first available from the list of candidates."
+  (loop for font in fonts
+        when (x-list-fonts font)
+        do (progn
+             (set-frame-font font)
+             (return))))
+
 (if (display-graphic-p)
     (progn
       (tool-bar-mode 0)
@@ -495,14 +569,8 @@
       (set-foreground-color "black")
       (set-cursor-color "black")
       (set-mouse-color "black")
-      ;;(set-default-font "7x13")
-      (if (eq system-type 'windows-nt)
-          ;;(set-default-font "DejaVu Sans Mono-10")
-          ;;(set-default-font "Courier New-10")
-          (set-default-font "Source Code Pro-10")
-        (set-default-font "Office Code Pro Light-10"))
-      )
-)
+      (rjm/set-first-available-font rjm/font-candidates)
+      ))
 
 
 ;;-------------------------------------------------------------------------------
@@ -516,7 +584,6 @@
 (global-set-key (kbd "C-z") 'undo)
 
 (global-set-key (kbd "C-/") 'comment-or-uncomment-region)
-(global-set-key (kbd "C-c r") 'query-replace)
 (global-set-key (kbd "C-c g") 'goto-line)
 (global-set-key (kbd "C-c s") 'shell)
 (global-set-key (kbd "C-c k") 'kill-this-buffer)
