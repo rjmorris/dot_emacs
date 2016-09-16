@@ -548,7 +548,7 @@
 (setq rjm/font-candidates
       '(
         "Office Code Pro Light-10"
-        "Source Code Pro Light-10"
+        "Source Code Pro-10"
         "DejaVu Sans Mono-10"
         "Courier New-10"
         ))
