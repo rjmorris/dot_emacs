@@ -338,13 +338,18 @@
 
 ;; gfm is GitHub-flavored Markdown. There is also markdown-mode for regular
 ;; Markdown. I'm not aware of a BitBucket-specific Markdown mode.
-;;
-;; gfm-mode automatically enables visual-line-mode, which "soft-wraps" long lines
-;; in the buffer. Some sources say newlines are significant in GFM. Testing shows
-;; this may not be true in readme files, but possibly it is elsewhere. Or maybe
-;; it has changed over time. In any case, avoid using fill-paragraph (M-q), which
-;; wraps long lines by inserting newline characters.
 (add-to-list 'auto-mode-alist '("readme\\.md$" . gfm-mode))
+
+;; Some sources say newlines are significant in GFM. Testing shows this may not
+;; be true in readme files, but possibly it is elsewhere. Or maybe it has
+;; changed over time. In any case, avoid using fill-paragraph (M-q), which wraps
+;; long lines by inserting newline characters. Instead, use visual-line-model to
+;; "soft wrap" long lines.
+(add-hook 'gfm-mode-hook 'rjm/on-gfm-mode t)
+(defun rjm/on-gfm-mode ()
+  (local-set-key (kbd "M-q") 'ignore)
+  (visual-line-mode 1)
+)
 
 
 ;;-------------------------------------------------------------------------------
