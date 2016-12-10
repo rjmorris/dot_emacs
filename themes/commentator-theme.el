@@ -41,6 +41,7 @@
    `(comint-highlight-prompt ((,class (:weight bold))))
 
    `(sh-quoted-exec ((,class (:foreground ,fg :background ,bg))))
+   `(sh-heredoc ((,class (:foreground ,fg :background ,bg))))
 
    `(cperl-nonoverridable-face ((,class (:foreground ,fg :background ,bg))))
    `(cperl-array-face ((,class (:foreground ,fg :background ,bg))))
