@@ -546,6 +546,9 @@
 (global-auto-revert-mode)
 
 ;; Function for computing a random number suitable as a seed and inserting it.
+;;
+;; The maximum representable integer in elisp is 2**29 - 1 on 32-bit systems,
+;; so pick a number up to 2**28 to be safe.
 (defun rjm/insert-seed-at-point ()
   (interactive)
   (let
