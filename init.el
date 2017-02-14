@@ -545,6 +545,13 @@
 ;; When a file changes on disk, update the buffer to reflect the new contents.
 (global-auto-revert-mode)
 
+;; Function for computing a random number suitable as a seed and inserting it.
+(defun rjm/insert-seed-at-point ()
+  (interactive)
+  (let
+      ((max_int (expt 2 28)))
+    (insert (number-to-string (random max_int)))))
+
 
 ;;-------------------------------------------------------------------------------
 ;; settings applicable only with graphical displays
