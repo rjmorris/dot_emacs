@@ -340,6 +340,7 @@
 ;; gfm is GitHub-flavored Markdown. There is also markdown-mode for regular
 ;; Markdown. I'm not aware of a BitBucket-specific Markdown mode.
 (add-to-list 'auto-mode-alist '("readme\\.md$" . gfm-mode))
+(add-to-list 'auto-mode-alist '("README\\.md$" . gfm-mode))
 
 ;; Some sources say newlines are significant in GFM. Testing shows this may not
 ;; be true in readme files, but possibly it is elsewhere. Or maybe it has
