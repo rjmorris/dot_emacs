@@ -62,6 +62,7 @@
     smart-compile
     smex
     visual-regexp
+    csv-mode
     ))
 
 (defun required-packages-installed-p ()
