@@ -236,9 +236,11 @@
 (add-hook 'ess-mode-hook 'rjm/on-ess-mode t)
 (defun rjm/on-ess-mode ()
   ;; Override ESS's binding of the Return key. It's set to newline-and-indent by
-  ;; default. Note: Bind to "RET" here instead of "<return>". RET works in the
-  ;; terminal and GUI, but <return> works only in the GUI.
+  ;; default. Note: Bind to both "RET" and "<return>". "RET" seems to work in both
+  ;; the terminal and GUI, while "<return>" works only in the GUI, but bind both
+  ;; just to be sure.
   (local-set-key (kbd "RET") 'newline)
+  (local-set-key (kbd "<return>") 'newline)
 
   ;; Override ESS's binding of C-Return. It's set to
   ;; ess-eval-region-or-line-and-step by default. Contrary to the comment about
@@ -246,8 +248,19 @@
   ;; terminal, so just use the more standard "C-<return>". This doesn't work in
   ;; the terminal, but at least it works in the GUI.
   (local-set-key (kbd "C-<return>") #'dabbrev-expand)
+)
 
+(add-hook 'R-mode-hook 'rjm/on-R-mode t)
+(defun rjm/on-R-mode ()
   (local-set-key (kbd "<f8>") #'rjm/smart-r-eval)
+)
+
+(add-hook 'SAS-mode-hook 'rjm/on-SAS-mode t)
+(defun rjm/on-SAS-mode ()
+  ;; These keybindings are also set in ess-mode-hook, but something about SAS
+  ;; mode overrides them, so we have to set them again here.
+  (local-set-key (kbd "RET") 'newline)
+  (local-set-key (kbd "<return>") 'newline)
 )
 
 
