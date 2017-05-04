@@ -248,6 +248,19 @@
   ;; terminal, so just use the more standard "C-<return>". This doesn't work in
   ;; the terminal, but at least it works in the GUI.
   (local-set-key (kbd "C-<return>") #'dabbrev-expand)
+
+  ;; By default, ESS indents comments differently depending on the number of
+  ;; pound signs:
+  ;;
+  ;;   # - indent to the value of comment-column (40 by default)
+  ;;   ## - indent to the current syntactic level
+  ;;   ### - indent to the left margin (i.e., no indentation)
+  ;;
+  ;; Disable this behavior so that any comment is indented to the current
+  ;; syntactic level.
+  ;;
+  ;; Note that this needs to be in a hook, or else it will be overridden.
+  (setq ess-indent-with-fancy-comments nil)
 )
 
 (add-hook 'R-mode-hook 'rjm/on-R-mode t)
