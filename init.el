@@ -21,6 +21,13 @@
 (require 'package)
 
 
+;; Don't check package signatures. Some packages don't have signatures, which
+;; causes installation to fail. Setting this to 'allow-unsigned ought to check
+;; the signature when it's present while allowing unsigned packages to be
+;; installed, but I still got an error with unsigned packages when I tried that.
+(setq package-check-signature nil)
+
+
 ;; In Windows, store packages on my hard drive instead of my home directory,
 ;; which may be on a network share. (Having them on a network share can a
 ;; problem at work because of disk space quotas.)
