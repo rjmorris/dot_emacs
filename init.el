@@ -134,7 +134,7 @@
 
 ;; "Smart" evaluation function:
 ;;   If a Python process hasn't been started, start it.
-;;   Else, if a region is active, evaluate the region.
+;;   Else, if a region is active, evaluate and deactivate the region.
 ;;   Else, evaluate the current line.
 (defun rjm/smart-python-eval ()
   (interactive)
@@ -142,7 +142,8 @@
    ((not (member "*Python*" (mapcar (function buffer-name) (buffer-list))))
     (rjm/set-up-python-environment))
    ((region-active-p)
-    (call-interactively 'python-shell-send-region))
+    (call-interactively 'python-shell-send-region)
+    (deactivate-mark))
    (t
     (python-shell-send-region (line-beginning-position) (line-end-position)))))
 
