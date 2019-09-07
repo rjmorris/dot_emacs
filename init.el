@@ -619,10 +619,6 @@
     (progn
       (tool-bar-mode 0)
       (set-scroll-bar-mode 'right)
-      (set-background-color "lightgray")
-      (set-foreground-color "black")
-      (set-cursor-color "black")
-      (set-mouse-color "black")
       (rjm/set-first-available-font rjm/font-candidates)
       ))
 

@@ -26,6 +26,11 @@
   (custom-theme-set-faces
    'commentator
    `(default ((,class (:foreground ,fg :background ,bg))))
+   `(cursor ((,class (:background ,fg))))
+   `(fringe ((,class (:foreground ,fg :background "#f2f2f2"))))
+   `(mode-line ((,class (:foreground ,fg :background "#bebebe" :box (:line-width -1 :style released-button)))))
+   `(mode-line-inactive ((,class (:foreground "#333333" :background "#e5e5e5" :box (:line-width -1 :color "#bfbfbf" :style nil)))))
+
    `(font-lock-comment-face ((,class (:foreground ,comment :background ,bg))))
    `(font-lock-builtin-face ((,class (:foreground ,fg :background ,bg))))
    `(font-lock-constant-face ((,class (:foreground ,fg :background ,bg))))
