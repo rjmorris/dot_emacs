@@ -365,6 +365,9 @@
 ;; names) as literal underscores instead of emphasis markers. Regular Markdown
 ;; mode applies emphasis in that situation.
 
+;; Don't automatically indent upon pressing <enter>.
+(setq markdown-indent-on-enter nil)
+
 ;; BitBucket's Markdown implementation uses python-markdown. Look into grip for
 ;; GitHub if python-markdown turns out not to be satisfactory for GitHub. Also
 ;; note that readme files can be edited directly on the GitHub and BitBucket
