@@ -606,6 +606,7 @@
 
 (setq rjm/font-candidates
       '(
+        "Hack:size=13"
         "Office Code Pro Medium-10"
         "Source Code Pro Semibold-10"
         "DejaVu Sans Mono-10"
