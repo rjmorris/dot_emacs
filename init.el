@@ -369,6 +369,10 @@
 ;; Don't automatically indent upon pressing <enter>.
 (setq markdown-indent-on-enter nil)
 
+;; Don't prompt for the programming language when adding code blocks via
+;; triple-backticks.
+(setq markdown-gfm-use-electric-backquote nil)
+
 ;; BitBucket's Markdown implementation uses python-markdown. Look into grip for
 ;; GitHub if python-markdown turns out not to be satisfactory for GitHub. Also
 ;; note that readme files can be edited directly on the GitHub and BitBucket
