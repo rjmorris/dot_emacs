@@ -70,6 +70,7 @@
     smex
     visual-regexp
     csv-mode
+    vue-mode
     ))
 
 (defun required-packages-installed-p ()
