@@ -374,7 +374,7 @@
 ;; Some sources say newlines are significant in GFM. Testing shows this may not
 ;; be true in readme files, but possibly it is elsewhere. Or maybe it has
 ;; changed over time. In any case, avoid using fill-paragraph (M-q), which wraps
-;; long lines by inserting newline characters. Instead, use visual-line-model to
+;; long lines by inserting newline characters. Instead, use visual-line-mode to
 ;; "soft wrap" long lines.
 (add-hook 'gfm-mode-hook 'rjm/on-gfm-mode t)
 (defun rjm/on-gfm-mode ()
