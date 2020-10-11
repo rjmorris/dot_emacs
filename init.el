@@ -414,6 +414,11 @@
 (setq sentence-end-double-space nil)
 (setq-default truncate-lines t)
 
+;; Define the regular expression for identifying the start of a paragraph when
+;; filling text. The default is just a blank line or a form feed, but add
+;; alternatives for bulleted lists as well.
+(setq-default paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-*+][ \t]+\\|[ \t]*[0-9]+\\.[ \t]+")
+
 
 ;;-------------------------------------------------------------------------------
 ;; buffer switching
