@@ -389,6 +389,22 @@
 
 
 ;;-------------------------------------------------------------------------------
+;; git
+
+;; When writing git commit messages, the buffer is named COMMIT_EDITMSG and is
+;; opened in fundamental-mode by default. text-mode doesn't bring much, but it's
+;; a little more aligned with the expected contents. Best practices say the body
+;; of the message should be wrapped at 72 characters, so set that up. Best
+;; practices also say the subject of the message should be 50 characters or
+;; less, but I don't know of a good way to address that.
+(add-hook 'find-file-hooks #'rjm/on-git-commit-message)
+(defun rjm/on-git-commit-message ()
+  (when (string-equal (buffer-name) "COMMIT_EDITMSG")
+    (text-mode)
+    (setq fill-column 72)))
+
+
+;;-------------------------------------------------------------------------------
 ;; template package
 
 ;;(require 'template)
