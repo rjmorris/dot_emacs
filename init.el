@@ -348,13 +348,13 @@
 ;; markdown
 
 ;; Different Markdown implementations support different features. The ones I'll
-;; interact with most frequently are the ones from GitHub and BitBucket. Ideally,
-;; I would detect whether I'm inside a GitHub repository, a BitBucket repository,
-;; or neither, and configure things accordingly. But I'm not doing that for now.
+;; interact with most frequently are the ones from GitHub and GitLab. Ideally, I
+;; would detect whether I'm inside a GitHub repository, a GitLab repository, or
+;; neither, and configure things accordingly. But I'm not doing that for now.
 ;;
-;; Even though GitHub and BitBucket don't necessarily support the same syntax,
-;; they are the same in one major way that deviates from regular Markdown. They
-;; both treat underscores in the middle of words (like in file names or variable
+;; Even though GitHub and GitLab don't necessarily support the same syntax, they
+;; are the same in one major way that deviates from regular Markdown. They both
+;; treat underscores in the middle of words (like in file names or variable
 ;; names) as literal underscores instead of emphasis markers. Regular Markdown
 ;; mode applies emphasis in that situation.
 
@@ -364,12 +364,6 @@
 ;; Don't prompt for the programming language when adding code blocks via
 ;; triple-backticks.
 (setq markdown-gfm-use-electric-backquote nil)
-
-;; BitBucket's Markdown implementation uses python-markdown. Look into grip for
-;; GitHub if python-markdown turns out not to be satisfactory for GitHub. Also
-;; note that readme files can be edited directly on the GitHub and BitBucket
-;; websites.
-(setq markdown-command (concat "python -m markdown -x markdown.extensions.codehilite -c " (expand-file-name "~/.emacs.d/python-markdown-options.json")))
 
 ;; gfm is GitHub-flavored Markdown. There is also markdown-mode for regular
 ;; Markdown. I'm not aware of a BitBucket-specific Markdown mode.
