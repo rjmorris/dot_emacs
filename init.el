@@ -388,15 +388,23 @@
 
 ;; When writing git commit messages, the buffer is named COMMIT_EDITMSG and is
 ;; opened in fundamental-mode by default. text-mode doesn't bring much, but it's
-;; a little more aligned with the expected contents. Best practices say the body
-;; of the message should be wrapped at 72 characters, so set that up. Best
-;; practices also say the subject of the message should be 50 characters or
-;; less, but I don't know of a good way to address that.
+;; a little more aligned with the expected contents.
+;;
+;; Best practices say the body of the message should be wrapped at 72
+;; characters, so set that up. Best practices also say the subject of the
+;; message should be 50 characters or less, but I don't know of a good way to
+;; address that.
+;;
+;; Also insert a blank line for better separation between the text I will write
+;; and the text that git inserts at the bottom of the file. This makes it more
+;; convenient to run fill-paragraph, because the blank line indicates a
+;; paragraph boundary between my text and git's text.
 (add-hook 'find-file-hooks #'rjm/on-git-commit-message)
 (defun rjm/on-git-commit-message ()
   (when (string-equal (buffer-name) "COMMIT_EDITMSG")
     (text-mode)
-    (setq fill-column 72)))
+    (setq fill-column 72)
+    (open-line 1)))
 
 
 ;;-------------------------------------------------------------------------------
