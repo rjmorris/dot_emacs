@@ -398,13 +398,17 @@
 ;; Also insert a blank line for better separation between the text I will write
 ;; and the text that git inserts at the bottom of the file. This makes it more
 ;; convenient to run fill-paragraph, because the blank line indicates a
-;; paragraph boundary between my text and git's text.
+;; paragraph boundary between my text and git's text. (Skip this if a message is
+;; already present, such as when doing `git commit --amend`.)
+
 (add-hook 'find-file-hooks #'rjm/on-git-commit-message)
 (defun rjm/on-git-commit-message ()
   (when (string-equal (buffer-name) "COMMIT_EDITMSG")
     (text-mode)
     (setq fill-column 72)
-    (open-line 1)))
+    (when (looking-at-p "^$")
+      (open-line 1)
+      (save-buffer))))
 
 
 ;;-------------------------------------------------------------------------------
