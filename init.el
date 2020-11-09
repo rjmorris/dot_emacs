@@ -620,6 +620,9 @@
 ;;-------------------------------------------------------------------------------
 ;; keybindings
 
+;; When Mac sends us the command modifier, treat it as the control modifier.
+(setq mac-command-modifier 'control)
+
 ;; Unset existing undo keybindings, and set others. Keep (kbd "C-x u") as undo
 ;; for now, since I'm used to that one.
 (global-unset-key (kbd "C-_"))
