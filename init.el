@@ -46,8 +46,8 @@
 (package-initialize)
 
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") nil)
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") nil)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") nil)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") nil)
 
 
 ;; Define a list of packages that I want installed everywhere. If any of the
