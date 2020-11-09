@@ -628,8 +628,8 @@
       '(
         "Hack:size=13"
         "Monaco-12"
-        "Office Code Pro Light-10"
-        "Source Code Pro-10"
+        "Office Code Pro Medium-10"
+        "Source Code Pro Semibold-10"
         "DejaVu Sans Mono-10"
         "Courier New-10"
         ))
