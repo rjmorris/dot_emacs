@@ -21,6 +21,13 @@
 (require 'package)
 
 
+;; Don't check package signatures. Some packages don't have signatures, which
+;; causes installation to fail. Setting this to 'allow-unsigned ought to check
+;; the signature when it's present while allowing unsigned packages to be
+;; installed, but I still got an error with unsigned packages when I tried that.
+(setq package-check-signature nil)
+
+
 ;; In Windows, store packages on my hard drive instead of my home directory,
 ;; which may be on a network share. (Having them on a network share can a
 ;; problem at work because of disk space quotas.)
@@ -63,6 +70,7 @@
     smex
     visual-regexp
     csv-mode
+    vue-mode
     ))
 
 (defun required-packages-installed-p ()
@@ -127,7 +135,7 @@
 
 ;; "Smart" evaluation function:
 ;;   If a Python process hasn't been started, start it.
-;;   Else, if a region is active, evaluate the region.
+;;   Else, if a region is active, evaluate and deactivate the region.
 ;;   Else, evaluate the current line.
 (defun rjm/smart-python-eval ()
   (interactive)
@@ -135,7 +143,8 @@
    ((not (member "*Python*" (mapcar (function buffer-name) (buffer-list))))
     (rjm/set-up-python-environment))
    ((region-active-p)
-    (call-interactively 'python-shell-send-region))
+    (call-interactively 'python-shell-send-region)
+    (deactivate-mark))
    (t
     (python-shell-send-region (line-beginning-position) (line-end-position)))))
 
@@ -168,14 +177,6 @@
 
 (add-hook 'cperl-mode-hook 'rjm/on-cperl-mode t)
 (defun rjm/on-cperl-mode ()
-  )
-
-
-;;-------------------------------------------------------------------------------
-;; SH section
-
-(add-hook 'sh-mode-hook 'rjm/on-sh-mode t)
-(defun rjm/on-sh-mode ()
   )
 
 
@@ -347,37 +348,67 @@
 ;; markdown
 
 ;; Different Markdown implementations support different features. The ones I'll
-;; interact with most frequently are the ones from GitHub and BitBucket. Ideally,
-;; I would detect whether I'm inside a GitHub repository, a BitBucket repository,
-;; or neither, and configure things accordingly. But I'm not doing that for now.
+;; interact with most frequently are the ones from GitHub and GitLab. Ideally, I
+;; would detect whether I'm inside a GitHub repository, a GitLab repository, or
+;; neither, and configure things accordingly. But I'm not doing that for now.
 ;;
-;; Even though GitHub and BitBucket don't necessarily support the same syntax,
-;; they are the same in one major way that deviates from regular Markdown. They
-;; both treat underscores in the middle of words (like in file names or variable
+;; Even though GitHub and GitLab don't necessarily support the same syntax, they
+;; are the same in one major way that deviates from regular Markdown. They both
+;; treat underscores in the middle of words (like in file names or variable
 ;; names) as literal underscores instead of emphasis markers. Regular Markdown
 ;; mode applies emphasis in that situation.
 
-;; BitBucket's Markdown implementation uses python-markdown. Look into grip for
-;; GitHub if python-markdown turns out not to be satisfactory for GitHub. Also
-;; note that readme files can be edited directly on the GitHub and BitBucket
-;; websites.
-(setq markdown-command (concat "python -m markdown -x markdown.extensions.codehilite -c " (expand-file-name "~/.emacs.d/python-markdown-options.json")))
+;; Don't automatically indent upon pressing <enter>.
+(setq markdown-indent-on-enter nil)
 
-;; gfm is GitHub-flavored Markdown. There is also markdown-mode for regular
-;; Markdown. I'm not aware of a BitBucket-specific Markdown mode.
-(add-to-list 'auto-mode-alist '("readme\\.md$" . gfm-mode))
-(add-to-list 'auto-mode-alist '("README\\.md$" . gfm-mode))
+;; Don't prompt for the programming language when adding code blocks via
+;; triple-backticks.
+(setq markdown-gfm-use-electric-backquote nil)
+
+;; gfm is GitHub-flavored Markdown, which enables extensions beyond regular
+;; markdown-mode. For example, it supports fenced code blocks (surrounding them
+;; by triple backticks instead of indenting them) and allows underscores within
+;; words without italicizing them.
+(add-to-list 'auto-mode-alist '("\\.md$" . gfm-mode))
 
 ;; Some sources say newlines are significant in GFM. Testing shows this may not
 ;; be true in readme files, but possibly it is elsewhere. Or maybe it has
 ;; changed over time. In any case, avoid using fill-paragraph (M-q), which wraps
-;; long lines by inserting newline characters. Instead, use visual-line-model to
+;; long lines by inserting newline characters. Instead, use visual-line-mode to
 ;; "soft wrap" long lines.
 (add-hook 'gfm-mode-hook 'rjm/on-gfm-mode t)
 (defun rjm/on-gfm-mode ()
   (local-set-key (kbd "M-q") 'ignore)
   (visual-line-mode 1)
 )
+
+
+;;-------------------------------------------------------------------------------
+;; git
+
+;; When writing git commit messages, the buffer is named COMMIT_EDITMSG and is
+;; opened in fundamental-mode by default. text-mode doesn't bring much, but it's
+;; a little more aligned with the expected contents.
+;;
+;; Best practices say the body of the message should be wrapped at 72
+;; characters, so set that up. Best practices also say the subject of the
+;; message should be 50 characters or less, but I don't know of a good way to
+;; address that.
+;;
+;; Also insert a blank line for better separation between the text I will write
+;; and the text that git inserts at the bottom of the file. This makes it more
+;; convenient to run fill-paragraph, because the blank line indicates a
+;; paragraph boundary between my text and git's text. (Skip this if a message is
+;; already present, such as when doing `git commit --amend`.)
+
+(add-hook 'find-file-hooks #'rjm/on-git-commit-message)
+(defun rjm/on-git-commit-message ()
+  (when (string-equal (buffer-name) "COMMIT_EDITMSG")
+    (text-mode)
+    (setq fill-column 72)
+    (when (looking-at-p "^$")
+      (open-line 1)
+      (save-buffer))))
 
 
 ;;-------------------------------------------------------------------------------
@@ -394,6 +425,11 @@
 (setq-default fill-column 80)
 (setq sentence-end-double-space nil)
 (setq-default truncate-lines t)
+
+;; Define the regular expression for identifying the start of a paragraph when
+;; filling text. The default is just a blank line or a form feed, but add
+;; alternatives for bulleted lists as well.
+(setq-default paragraph-start "\f\\|[ \t]*$\\|[ \t]*[-*+][ \t]+\\|[ \t]*[0-9]+\\.[ \t]+")
 
 
 ;;-------------------------------------------------------------------------------
@@ -590,6 +626,7 @@
 
 (setq rjm/font-candidates
       '(
+        "Hack:size=13"
         "Monaco-12"
         "Office Code Pro Light-10"
         "Source Code Pro-10"
@@ -609,10 +646,6 @@
     (progn
       (tool-bar-mode 0)
       (set-scroll-bar-mode 'right)
-      (set-background-color "lightgray")
-      (set-foreground-color "black")
-      (set-cursor-color "black")
-      (set-mouse-color "black")
       (rjm/set-first-available-font rjm/font-candidates)
       ))
 

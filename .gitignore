@@ -1,0 +1,5 @@
+abbrev_defs
+auto-save-list/
+elpa/
+smex-items
+themes/*.el
