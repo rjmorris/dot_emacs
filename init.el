@@ -690,6 +690,17 @@
 ;; Replace list-buffers with buffer-menu to open the buffer menu in the current buffer.
 (global-set-key (kbd "C-x C-b") 'buffer-menu)
 
+;; Use C-mousewheel for adjusting the font size. This can also be done using
+;; only the keyboard with C-x C-+ (equivalent to C-x C-=) and C-x C--.
+(if (eq system-type 'gnu/linux)
+    (progn
+      (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
+      (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease))
+  (progn
+    (global-set-key (kbd "<C-mouse-up>") 'text-scale-increase)
+    (global-set-key (kbd "<C-mouse-down>") 'text-scale-decrease)))
+
+
 
 ;;-------------------------------------------------------------------------------
 ;; enabled/disabled commands
