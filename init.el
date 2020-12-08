@@ -697,8 +697,8 @@
       (global-set-key (kbd "<C-mouse-4>") 'text-scale-increase)
       (global-set-key (kbd "<C-mouse-5>") 'text-scale-decrease))
   (progn
-    (global-set-key (kbd "<C-mouse-up>") 'text-scale-increase)
-    (global-set-key (kbd "<C-mouse-down>") 'text-scale-decrease)))
+    (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
+    (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)))
 
 
 
