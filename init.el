@@ -315,6 +315,9 @@
 (mmm-add-mode-ext-class 'html-mode nil 'html-js)
 (mmm-add-mode-ext-class 'html-mode nil 'html-css)
 
+;; Fix indentation in emacs 26.3. See https://github.com/AdamNiederer/vue-mode/issues/74
+(setq mmm-js-mode-enter-hook (lambda () (setq syntax-ppss-table nil)))
+
 
 ;;-------------------------------------------------------------------------------
 ;; CSS section
