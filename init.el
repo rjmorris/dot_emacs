@@ -622,6 +622,12 @@
       ((max_int (expt 2 28)))
     (insert (number-to-string (random max_int)))))
 
+;; Insert the current UTC time as an ISO 8601 timestamp. The format matches
+;; the output of JavaScript's (new Date()).toJson().
+(defun rjm/insert-timestamp-utc ()
+  (interactive)
+  (insert (format-time-string "%FT%T.%3NZ" (current-time) t)))
+
 
 ;;-------------------------------------------------------------------------------
 ;; settings applicable only with graphical displays
